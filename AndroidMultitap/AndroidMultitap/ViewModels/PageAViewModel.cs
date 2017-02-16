@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using System;
 
 namespace AndroidMultitap.ViewModels
 {
@@ -9,6 +10,7 @@ namespace AndroidMultitap.ViewModels
     {
         public PageAViewModel(Page page)
         {
+            Title = "Page A";
             CurrentPage = page;
         }
 
@@ -20,7 +22,7 @@ namespace AndroidMultitap.ViewModels
             get
             {
                 if (_goToPageB == null)
-                    _goToPageB = new Command(OnGotoPageB);
+                    _goToPageB = new Command(OnGotoPageB, (x) => CanNavigate);
 
                 return _goToPageB;
             }

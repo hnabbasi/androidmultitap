@@ -11,6 +11,7 @@ namespace AndroidMultitap.ViewModels
     {
         public PageBViewModel(Page page)
         {
+            Title = "Page B";
             CurrentPage = page;
         }
     }
