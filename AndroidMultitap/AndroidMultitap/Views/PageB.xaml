@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AndroidMultitap.Views.PageB"
 			 Title="{Binding Title}"
-			 IsBusy="{Binding IsBusy}">
-  <Label Text="Welcome to Page B" VerticalOptions="Center" HorizontalOptions="Center" />
+			 IsBusy="{Binding IsBusy}"
+			 BackgroundColor="{Binding PageBackgroundColor}">
+	
+  <Label Text="Welcome to Page B" FontSize="18" VerticalOptions="Center" HorizontalOptions="Center" />
 </ContentPage>

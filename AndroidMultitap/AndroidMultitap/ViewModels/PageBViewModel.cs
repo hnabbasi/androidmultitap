@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace AndroidMultitap.ViewModels
@@ -13,6 +9,19 @@ namespace AndroidMultitap.ViewModels
         {
             Title = "Page B";
             CurrentPage = page;
+        }
+
+        public Color PageBackgroundColor => GetRandomColor ();
+
+        Color GetRandomColor()
+        {
+            var random = new Random ();
+
+            var r = random.Next (255);
+            var g = random.Next (255);
+            var b = random.Next (255);
+
+            return Color.FromRgb (r, g, b);
         }
     }
 }

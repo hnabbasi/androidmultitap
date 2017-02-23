@@ -4,5 +4,10 @@
              x:Class="AndroidMultitap.Views.PageA"
 			 Title="{Binding Title}"
 			 IsBusy="{Binding IsBusy}">
-	<Button Text="Go To Page B" Command="{Binding GoToPageBCommand}" VerticalOptions="Center" />
+
+	<StackLayout VerticalOptions="Center">
+		<Button Text="Show Alert" Command="{Binding ShowAlertCommand}" VerticalOptions="Center" />
+		<Button Text="Go To Page B" Command="{Binding GoToPageBCommand}" VerticalOptions="Center" />
+	</StackLayout>
+
 </ContentPage>

@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
-using System;
 
 namespace AndroidMultitap.ViewModels
 {
@@ -16,15 +15,31 @@ namespace AndroidMultitap.ViewModels
 
         #region Commands
 
-        ICommand _goToPageB;
+        ICommand _showAlertCommand;
+        public ICommand ShowAlertCommand
+        {
+            get {
+                if (_showAlertCommand == null)
+                    _showAlertCommand = new Command (OnShowAlert, AllowNavigation);
+                
+                return _showAlertCommand;
+            }
+        }
+
+        async void OnShowAlert (object obj)
+        {
+            await RunTask(CurrentPage.DisplayAlert ("Hello", "From intelliAbb", "OK"));
+        }
+
+        ICommand _goToPageBCommand;
         public ICommand GoToPageBCommand
         {
             get
             {
-                if (_goToPageB == null)
-                    _goToPageB = new Command(OnGotoPageB, (x) => CanNavigate);
+                if (_goToPageBCommand == null)
+                    _goToPageBCommand = new Command(OnGotoPageB, AllowNavigation);
 
-                return _goToPageB;
+                return _goToPageBCommand;
             }
         }
 

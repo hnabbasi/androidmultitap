@@ -1,20 +1,15 @@
-﻿using AndroidMultitap.Helpers;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using System.Diagnostics;
+using System.Threading;
 
 namespace AndroidMultitap.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged, IDisposable
     {
-        public BaseViewModel ()
-        {
-            MessagingCenter.Subscribe<object, bool> (this, "IsBusyUpdated", OnIsBusyUpdated);
-        }
-
         #region Properties
 
         string _title;          public string Title {             get { return _title; }             set 
@@ -45,6 +40,7 @@ namespace AndroidMultitap.ViewModels
             }
         }
 
+
         Page _currentPage;
         public Page CurrentPage
         {
@@ -55,6 +51,16 @@ namespace AndroidMultitap.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public Func<object,bool> AllowNavigation => ShouldAllowNavigation;
+
+        bool ShouldAllowNavigation (object arg)
+        {
+            // Add logic to determine if the UI should be disabled 
+            // while executing a task that is observing this action.
+            return CanNavigate;
+        }            
+
 
         #endregion
 
@@ -71,18 +77,21 @@ namespace AndroidMultitap.ViewModels
 
         #region TaskRunner
 
-        protected async Task RunTask(Task task, bool notifyException = true, [CallerMemberName] string caller = "")
+        protected async Task RunTask(Task task, bool notifyException = true, bool lockNavigation = true, CancellationTokenSource token = default(CancellationTokenSource), [CallerMemberName] string caller = "")
         {
-            if (!CanNavigate)
+            if (token != null && token.IsCancellationRequested)
                 return;
-
+            
             Exception exception = null;
 
             try
             {
-                UpdateIsBusy (true);
-                await TaskRunner.RunSafe(task);
+                UpdateIsBusy (true, lockNavigation);
+
+                await task;
+
                 UpdateIsBusy (false);
+
             } catch (TaskCanceledException) {
                 Debug.WriteLine ($"{caller} Task Cancelled");
             } catch (AggregateException e) {
@@ -112,27 +121,16 @@ namespace AndroidMultitap.ViewModels
         public void Dispose()
         {
             PropertyChanged = null;
-            MessagingCenter.Unsubscribe<object, bool> (this, "IsBusyUpdated");
         }
 
         #endregion
 
         #region Private Methods
 
-        void OnIsBusyUpdated (object sender, bool isBusy)
+        void UpdateIsBusy(bool isBusy, bool lockNavigation = true)
         {
-            if (IsBusy.Equals (isBusy)) 
-                return;
-
-            Debug.WriteLine ($">>> Sender: {sender.ToString()} IsBusy -> {isBusy}");
-
             IsBusy = isBusy;
-            CanNavigate = !isBusy;
-        }
-
-        void UpdateIsBusy(bool isBusy)
-        {
-            MessagingCenter.Send<object, bool> (this, "IsBusyUpdated", isBusy);
+            CanNavigate = !lockNavigation;
         }
 
         #endregion
