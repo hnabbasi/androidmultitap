@@ -77,7 +77,7 @@ namespace AndroidMultitap.ViewModels
 
         #region TaskRunner
 
-        protected async Task RunTask(Task task, bool notifyException = true, bool lockNavigation = true, CancellationTokenSource token = default(CancellationTokenSource), [CallerMemberName] string caller = "")
+        protected async Task RunTask(Task task, bool handleException = true, bool lockNavigation = true, CancellationTokenSource token = default(CancellationTokenSource), [CallerMemberName] string caller = "")
         {
             if (token != null && token.IsCancellationRequested)
                 return;
@@ -106,7 +106,7 @@ namespace AndroidMultitap.ViewModels
 
             if(exception != null)
             {
-                if (notifyException)
+                if (handleException)
                     await CurrentPage.DisplayAlert("Error", (exception.InnerException??exception).Message, "OK");
                 else
                     throw exception;
