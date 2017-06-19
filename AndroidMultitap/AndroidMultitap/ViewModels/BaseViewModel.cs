@@ -12,12 +12,17 @@ namespace AndroidMultitap.ViewModels
     {
         #region Properties
 
-        string _title;          public string Title {             get { return _title; }             set 
+        string _title;        
+        public string Title 
+        {
+            get { return _title; }
+            set 
             { 
                 _title = value; 
                 OnPropertyChanged ();
-            }         } 
-
+            }
+        }
+        
         bool _isBusy;
         public bool IsBusy
         {
